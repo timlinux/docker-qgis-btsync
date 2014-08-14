@@ -16,16 +16,14 @@ RUN apt-get -y update && apt-get install -y curl
 
 # Download and extract the executable to /usr/bin
 RUN curl -o /usr/bin/btsync.tar.gz http://download-lb.utorrent.com/endpoint/btsync/os/linux-x64/track/stable
-RUN cd /usr/bin && tar -xzvf btsync.tar.gz && rm btsync.tar.gz; mkdir -p /btsync/.sync; mkdir -p /home/realtime/analysis_data
-RUN groupadd -g 1500 btsync;  useradd -m -d /home/btsync -u 1500 -g 1500 btsync; chown -R btsync.btsync /btsync /home/realtime/analysis_data
+RUN cd /usr/bin && tar -xzvf btsync.tar.gz && rm btsync.tar.gz
 
 # Web GUI
 EXPOSE 8888
 # Listening port
 EXPOSE 55555
 
-USER btsync
-ADD btsync.conf /btsync/btsync.conf
+ADD btsync.conf /tmp/btsync.conf
+ADD start.sh /start.sh
 
-ENTRYPOINT ["btsync"]
-CMD ["--config", "/btsync/btsync.conf", "--nodaemon"]
+CMD ["/start.sh"]
